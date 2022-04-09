@@ -9,30 +9,25 @@ import (
 	"net/http"
 )
 
+func Run() {
 
-func Run(){
-	//defer database.Close()
-
-	r:=mux.NewRouter()
+	r := mux.NewRouter()
 
 	r.HandleFunc("/orders", OrderHanlder)
 
-	err:= http.ListenAndServe(":8000", r)
+	err := http.ListenAndServe(":8000", r)
 	if err != nil {
 		fmt.Print(err)
 	}
 
 }
 
+func OrderHanlder(w http.ResponseWriter, r *http.Request) {
 
-
-func OrderHanlder(w http.ResponseWriter, r *http.Request){
-
-
-	id:=r.URL.Query().Get("id")
-	order,ok:=cache.GetByID(id)
-	if !ok{
-		http.NotFound(w,r)
+	id := r.URL.Query().Get("id")
+	order, ok := cache.GetByID(id)
+	if !ok {
+		http.NotFound(w, r)
 		return
 	}
 

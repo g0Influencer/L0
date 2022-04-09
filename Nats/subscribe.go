@@ -12,18 +12,15 @@ import (
 	"os"
 )
 
-
 func Subscribe() {
-	or:= models.Order{}
+	or := models.Order{}
 	database.Connect()
-	//cache.Init()
-
 	e := godotenv.Load()
 	if e != nil {
 		fmt.Print(e)
 	}
 
-	sc, err := stan.Connect(os.Getenv("CLUSTER_ID"),os.Getenv("SUB_ID"),
+	sc, err := stan.Connect(os.Getenv("CLUSTER_ID"), os.Getenv("SUB_ID"),
 		stan.NatsURL(stan.DefaultNatsURL),
 		stan.SetConnectionLostHandler(func(_ stan.Conn, reason error) {
 			log.Printf("Connection lost, reason: %v", reason)
@@ -48,7 +45,7 @@ func Subscribe() {
 		cache.Set(or)
 		database.Insert(or)
 
-	},stan.SetManualAckMode())
+	}, stan.SetManualAckMode())
 	if err != nil {
 		panic(err)
 	}
@@ -57,6 +54,3 @@ func Subscribe() {
 	sc.Close()
 
 }
-
-
-
